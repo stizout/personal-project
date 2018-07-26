@@ -27,6 +27,7 @@ create table order (
     id primary key serial,
     product_id references products(id)
     order_id references orders(id)
+    
 )
 
 

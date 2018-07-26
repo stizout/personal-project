@@ -20,7 +20,9 @@ app.use(session({
 }));
 
 app.get('/dashboard', controller.readProducts);
+app.get('/user', controller.getUser);
 app.get('/checkout', controller.checkout);
+app.post('/orderNumber/:id', controller.orderNumber);
 app.post('/checkout/:id', controller.purchase);
 
 

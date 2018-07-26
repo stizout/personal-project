@@ -3,7 +3,9 @@ import './dashboard.css'
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {getCart} from '../ducks/reducer';
+import {login} from '../ducks/reducer';
 import {Link} from 'react-router-dom';
+import {orderNumber} from '../ducks/reducer';
 
 
 
@@ -21,6 +23,9 @@ class Dashboard extends Component {
         axios.get('/dashboard').then(res => {
             this.setState({products: res.data})
         })
+        axios.get('/user').then(res => {
+            this.props.login(res.data)
+        })
     }
 
     addToCart(product) {
@@ -31,6 +36,13 @@ class Dashboard extends Component {
                 cart: prevState.cart.concat(product),
                 total: prevState.total + price,
             }
+        })
+    }
+
+    orderNumber(id) {
+        this.props.getCart(this.state.cart)
+        axios.post(`/orderNumber/${id}`).then (res => {
+            this.props.orderNumber(res.data)
         })
     }
 
@@ -47,6 +59,7 @@ class Dashboard extends Component {
     }
 
     render() {
+        console.log(this.props.user)
         return (
             <div className="body">
                 <div className="navbar-left">
@@ -84,7 +97,13 @@ class Dashboard extends Component {
                         })}
                     </div>
                 : null }
-                    <Link to='/checkout'><button className="cart-checkout" onClick={() => this.props.getCart(this.state.cart)}>Checkout {Math.floor(this.state.total * 100) / 100}</button></Link>
+                    <Link to='/checkout'>
+                        <button 
+                            className="cart-checkout" 
+                            onClick={() => this.orderNumber(this.props.user.id)}
+                        >   Checkout {Math.floor(this.state.total * 100) / 100}
+                        </button>
+                    </Link>
                 </div>
             </div>
         )
@@ -93,12 +112,15 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        cart: state.cart
+        cart: state.cart,
+        user: state.user
     }
 }
 
 const MapDispatchToProps = {
-    getCart
+    getCart,
+    login,
+    orderNumber
 }
 
 export default connect(mapStateToProps,MapDispatchToProps)(Dashboard)

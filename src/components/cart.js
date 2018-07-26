@@ -3,6 +3,7 @@ import './checkout.css'
 import axios from '../../node_modules/axios';
 import {connect} from 'react-redux';
 import {login} from '../ducks/reducer';
+import Checkout from './checkout';
 
 
 
@@ -16,6 +17,7 @@ class Cart extends Component {
         }
     }
     componentDidMount() {
+        
         axios.get('/checkout').then(res => {
             console.log(res)
             if(res.data !== 'not logged in'){
@@ -31,13 +33,20 @@ class Cart extends Component {
 
     purchase(id) {
         axios.post(`/checkout/${id}`, [...this.state.cart]).then(res => {
-
+            this.setState({
+                cart: [],
+                total: null
+            })
+        }).catch(err => {
+            console.log('error on purchase method', err)
         })
     }
     render() {
         let prices = this.state.cart.map((product) => Number(product.price))
         let sum = prices.reduce((a,b) => a + b, 0)
+        let finalSum = Math.floor(sum * 100) / 100
         console.log(this.props.user)
+        console.log(this.props.orderNumber)
         return (
             <div className="checkout-body">
             {this.props.user ? 
@@ -54,7 +63,12 @@ class Cart extends Component {
                     )
                 })}
 
-                <h1>Total: {sum}</h1><button onClick={() => this.purchase(this.props.user.id)}>Purchase</button>
+                <h1>Total: {sum}</h1>
+                <button onClick={() => this.purchase(this.props.orderNumber)}>Test Submit</button>
+                <Checkout 
+                    name="Boxed"
+                    amount={finalSum}
+                />
                 </div> : 'you are not logged in'}
             </div>
         )
@@ -64,7 +78,8 @@ class Cart extends Component {
 const mapStateToProps = (state) => {
     return {
         cart: state.cart,
-        user: state.user
+        user: state.user,
+        orderNumber: state.orderNumber
     }
 }
 

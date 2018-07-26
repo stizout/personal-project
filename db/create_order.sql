@@ -1,5 +1,4 @@
 insert into orders
-(user_id, product_id)
+(product_id, order_id)
 values
-(${user_id}, ${product_id});
-SELECT id from orders where user_id = ${user_id};
+(${product_id}, ${order_id});
