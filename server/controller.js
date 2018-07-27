@@ -57,5 +57,27 @@ module.exports = {
 
            }
         
-    }
+    },
+    getFood: (req, res) => {
+        req.app.get('db').sort_food().then(products => {
+            res.json(products)
+        }).catch(err => {
+            console.log('error with getFood request', err)
+        })
+    },
+    getCleaning: (req, res) => {
+        req.app.get('db').sort_cleaning().then(products => {
+            res.json(products)
+        }).catch(err => {
+            console.log('error with getCleaning request', err)
+        })
+    },
+    getPets: (req, res) => {
+        req.app.get('db').sort_pets().then(products => {
+            res.json(products)
+        }).catch(err => {
+            console.log('error with getPets request', err)
+        })
+    },
+
 }

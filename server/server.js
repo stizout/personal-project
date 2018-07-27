@@ -22,6 +22,9 @@ app.use(session({
 app.get('/dashboard', controller.readProducts);
 app.get('/user', controller.getUser);
 app.get('/checkout', controller.checkout);
+app.get('/dashboard/food', controller.getFood);
+app.get('/dashboard/cleaning', controller.getCleaning);
+app.get('/dashboard/pets', controller.getPets);
 app.post('/orderNumber/:id', controller.orderNumber);
 app.post('/checkout/:id', controller.purchase);
 

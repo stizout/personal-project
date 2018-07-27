@@ -16,6 +16,7 @@ class Dashboard extends Component {
             products: [],
             cart: [],
             total: null,
+            sort: '',
         }
     }
 
@@ -58,18 +59,85 @@ class Dashboard extends Component {
         })
     }
 
+    getOnlyFood() {
+        axios.get('/dashboard/food').then(res => {
+            this.setState({products: res.data})
+        })
+        
+    }
+    getOnlyCleaning() {
+        axios.get('/dashboard/cleaning').then(res => {
+            this.setState({products: res.data})
+        })
+
+    }
+    getOnlyPets() {
+        axios.get('/dashboard/pets').then(res => {
+            this.setState({products: res.data})
+        })
+
+    }
+
+
+
+    sort(value) {
+        this.setState({sort: value})
+        if(this.state.sort === 'low') {
+            function compare(a,b) {
+                let priceA = a.price * 100
+                let priceB = b.price * 100
+                let comparison = 0;
+                if(priceA > priceB) {
+                    comparison = 1;
+                } else {
+                    comparison = -1;
+                }
+                return comparison
+            }
+            let sorted = this.state.products.sort(compare)
+
+            this.setState({products: sorted})
+
+            
+        } else if (this.state.sort === 'high') {
+            function compare(a,b) {
+                let priceA = a.price * 100
+                let priceB = b.price * 100
+                let comparison = 0;
+                if(priceA > priceB) {
+                    comparison = -1;
+                } else {
+                    comparison = 1;
+                }
+                return comparison
+            }
+            let sorted = this.state.products.sort(compare)
+            this.setState({products: sorted})
+
+        }
+    }
+
     render() {
-        console.log(this.props.user)
+        console.log(this.state.sort)
         return (
             <div className="body">
+            <div>
+            </div>
                 <div className="navbar-left">
                     <ul>
-                        <li>Food</li>
-                        <li>Cleaning</li>
-                        <li>Pets</li>
+                        <li onClick={() => this.getOnlyFood()}>Food</li>
+                        <li onClick={() => this.getOnlyCleaning()}>Cleaning</li>
+                        <li onClick={() => this.getOnlyPets()}>Pets</li>
                     </ul>
                 </div>
                 <div className="dashboard">
+                        <select className="sort-input"
+                            onChange={(e) => this.sort(e.target.value)}
+                        >
+                            <option></option>
+                            <option value='low'>Price Lowest</option>
+                            <option value='high'>Price Highest</option>
+                        </select>
                     <div className="dashboard-product-container">
                         {this.state.products.map((product) => {
                             return (

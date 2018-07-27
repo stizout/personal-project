@@ -20,6 +20,11 @@
   .navbar-left ul li {
     margin-bottom: 20px;
     list-style-type: none;
+    cursor: pointer;
+  }
+
+  .sort-input {
+      float: right;
   }
 
   .dashboard {
@@ -52,7 +57,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(50px);
-      grid-gap: 10px;
+      grid-gap: 15px;
     }
     
     .dashboard-product {
@@ -65,7 +70,7 @@
 }
 
   .dashboard-product-image {
-      max-height: 150px;
+      max-height: 125px;
   }
 
   .dashboard-product button {
