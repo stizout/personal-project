@@ -4,7 +4,6 @@ const massive = require('massive');
 const session = require('express-session');
 const controller = require('./controller');
 const axios = require('axios');
-
 require('dotenv').config();
 
 
@@ -26,7 +25,9 @@ app.get('/dashboard/food', controller.getFood);
 app.get('/dashboard/cleaning', controller.getCleaning);
 app.get('/dashboard/pets', controller.getPets);
 app.post('/orderNumber/:id', controller.orderNumber);
-app.post('/checkout/:id', controller.purchase);
+app.post('/checkout/', controller.purchase);
+app.post('/charge', controller.stripe)
+// app.post(endpoint i choose, contorller stripe)
 
 
 

@@ -1,4 +1,5 @@
-
+require('dotenv').config();
+const stripe = require("stripe")(process.env.SECRET_KEY);
 
 module.exports = {
     readProducts: (req, res) => {
@@ -42,15 +43,20 @@ module.exports = {
         })
     },
     purchase: (req, res) => {
+        console.log('hit purchase')
+        let orderNumber = [req.body[0]]
         let productId = [];
-        const { id } = req.params
-        for(var i = 0; i < req.body.length; i++) {
-             productId.push(req.body[i].id)
+        let cart = []
+        for(var i = 0; i < req.body[1].length; i++) {
+            cart.push(req.body[1][i])
+        }
+        for(var i = 0; i < cart.length; i++) {
+             productId.push(cart[i].id)
         }
             for(var i = 0; i < productId.length; i++) {
                 req.app.get('db').create_order({
                     product_id: productId[i], 
-                    order_id: +id
+                    order_id: +orderNumber
                 }).then(newOrders => {
                     res.json(newOrders[0]);
                 })
@@ -79,5 +85,32 @@ module.exports = {
             console.log('error with getPets request', err)
         })
     },
+    stripe: (req, res) => {
+        console.log('hit stripe');
+        const { amount } = req.body
+        stripe.charges.create({
+            amount: amount,
+            currency: req.body.currency,
+            source: req.body.source,
+        }, function(err, charge) {
+            if(err) {
+                console.log('Error on stripe', err)
+            } else if (charge) {
+                res.json(charge);
+                console.log('Successful Charge', charge);
+            }
+        })
+    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
