@@ -82,12 +82,18 @@
 
 .dropdown-content {
   position: absolute;
-  background-color: purple;
+  background-color: white;
   z-index: 1;
+  min-width: 150px;
+  border: 1px solid #00b8a4
+}
+
+.dropdown-content a {
+  text-decoration: none;
 }
 
 .dropdown-content p {
-  color: white;
+  color: black;
   padding: 20px;
   text-decoration: none;
   display: block;
