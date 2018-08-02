@@ -20,15 +20,16 @@ app.use(session({
 
 app.get('/dashboard', controller.readProducts);
 app.get('/user', controller.getUser);
-app.get('/checkout', controller.checkout);
+app.get('/cart', controller.cart);
 app.get('/dashboard/food', controller.getFood);
 app.get('/dashboard/cleaning', controller.getCleaning);
 app.get('/dashboard/pets', controller.getPets);
 app.post('/orderNumber/:id', controller.orderNumber);
 app.post('/checkout/', controller.purchase);
 app.post('/charge', controller.stripe)
-// app.post(endpoint i choose, contorller stripe)
-
+app.post('/newAddress/:id', controller.newAddress);
+app.get('/getAddresses', controller.getAddresses);
+app.post('/logout', controller.logout);
 
 
 

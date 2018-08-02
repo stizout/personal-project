@@ -78,6 +78,12 @@ class Dashboard extends Component {
 
     }
 
+    showAll() {
+        axios.get('/dashboard').then(res => {
+            this.setState({products: res.data})
+        })
+    }
+
 
 
     sort(value) {
@@ -117,8 +123,33 @@ class Dashboard extends Component {
         }
     }
 
+    search() {
+        let newArray = []
+        for(let i = 0; i < this.state.cart.length; i++) {
+            if(this.state.cart[i].includes(this.props.search)) {
+                newArray.push(this.state.cart[i])
+            }
+        }
+        this.setState({cart: newArray})
+    }
+
+
+
     render() {
-        console.log(this.state.sort)
+        console.log(this.props.search)
+        let products = this.state.products.filter((e) => {
+            return e.name.toLowerCase().includes(this.props.search)
+        }).map((product) => {
+            return (
+                <div className="dashboard-product" key={product.id}>
+                    <img src={product.image} className="dashboard-product-image" alt="product"/>
+                    <p>{product.name}</p>
+                    <p>{product.mini}</p>
+                    <p>{product.price}</p>
+                    <button onClick={() => this.addToCart(product)}>Add</button><i className="far fa-heart">{product.likes}</i>
+                </div>
+            )
+        })
         return (
             <div className="body">
             <div>
@@ -128,18 +159,19 @@ class Dashboard extends Component {
                         <li onClick={() => this.getOnlyFood()}>Food</li>
                         <li onClick={() => this.getOnlyCleaning()}>Cleaning</li>
                         <li onClick={() => this.getOnlyPets()}>Pets</li>
+                        <li onClick={() => this.showAll()}>Show All</li>
                     </ul>
                 </div>
                 <div className="dashboard">
                         <select className="sort-input"
                             onChange={(e) => this.sort(e.target.value)}
                         >
-                            <option></option>
+                            <option>Sort By</option>
                             <option value='low'>Price Lowest</option>
                             <option value='high'>Price Highest</option>
                         </select>
                     <div className="dashboard-product-container">
-                        {this.state.products.map((product) => {
+                        {/* {this.state.products.map((product) => {
                             return (
                                 <div className="dashboard-product" key={product.id}>
                                     <img src={product.image} className="dashboard-product-image" alt="product"/>
@@ -149,7 +181,8 @@ class Dashboard extends Component {
                                     <button onClick={() => this.addToCart(product)}>Add</button><i className="far fa-heart">{product.likes}</i>
                                 </div>
                             )
-                        })}
+                        })} */}
+                        { products}
                     </div>
                 </div>
                 <div className="cart">
@@ -165,12 +198,14 @@ class Dashboard extends Component {
                         })}
                     </div>
                 : null }
-                    <Link to='/checkout'>
+                    <Link to='/cart'>
+                    {this.props.user ?
                         <button 
                             className="cart-checkout" 
                             onClick={() => this.orderNumber(this.props.user.id)}
                         >   Checkout {Math.floor(this.state.total * 100) / 100}
                         </button>
+                    :   <button className="cart-checkout">Checkout {Math.floor(this.state.total * 100) / 100}</button>}
                     </Link>
                 </div>
             </div>

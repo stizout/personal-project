@@ -20,7 +20,7 @@ module.exports = {
             console.log('erro in getUser', err);
         })
     },
-    checkout: (req, res) => {
+    cart: (req, res) => {
         if(req.session.user) {
             req.app.get('db').get_user(req.session.user.auth0id).then(users => {
                 res.json(users[0])
@@ -100,6 +100,29 @@ module.exports = {
                 console.log('Successful Charge', charge);
             }
         })
+    },
+    newAddress: (req,res) => {
+        const {street, city, state, zip} = req.body
+        console.log(street, city, state, zip)
+        console.log(req.params.id)
+        req.app.get('db').new_address({
+            street: street,
+            city: city,
+            state: state,
+            zip: +zip,
+            user_id: +req.params.id
+        }).then(newAddress => {
+            res.json(newAddress)
+        }).catch(err => {
+            console.log('error on newAddress', err);
+        })
+    },
+    getAddresses: (req, res) => {
+        console.log(req.body)
+    },
+    logout: (req, res) => {
+        req.session.destroy();
+        res.redirect('/')
     }
 
 }

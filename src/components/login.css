@@ -1,0 +1,17 @@
+
+
+.login {
+    display: flex;
+    height: 80vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.login button {
+    margin-left: 70px;
+    padding: 25px;
+    width: 200px;
+    background-color: #00b8a4;
+    color: white;
+    font-size: 24px;
+}

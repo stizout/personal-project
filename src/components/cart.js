@@ -15,8 +15,7 @@ class Cart extends Component {
         }
     }
     componentDidMount() {
-        
-        axios.get('/checkout').then(res => {
+        axios.get('/cart').then(res => {
             if(res.data !== 'not logged in'){
             this.props.login(res.data)
             this.setState({

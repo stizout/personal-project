@@ -25,9 +25,18 @@ create table orders (
 )
 create table order (
     id primary key serial,
-    product_id references products(id)
-    order_id references orders(id)
+    product_id int references products(id)
+    order_id int references orders(id)
     
+)
+
+create table addresses (
+    id serial primary key,
+    street text,
+    city text,
+    state text,
+    zip int,
+    user_id int references users(id)
 )
 
 
