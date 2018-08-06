@@ -6,6 +6,7 @@ import {login} from '../ducks/reducer';
 // import Checkout from './checkout';
 import StripeCheckout from 'react-stripe-checkout';
 
+
 class Cart extends Component {
     constructor() {
         super();
@@ -26,6 +27,8 @@ class Cart extends Component {
         }
         }) 
     }
+
+
 
     purchase(id) {
         axios.post(`/checkout/${id}`, [...this.state.cart]).then(res => {
@@ -60,14 +63,15 @@ class Cart extends Component {
                 })}
 
                 <h1>Total: {sum}</h1>
-                <button onClick={() => this.purchase(this.props.orderNumber)}>Test Submit</button>
                 <Checkout 
                     name="Boxed"
                     amount={finalSum}
                     cart={this.state.cart}
                     orderNumber={this.props.orderNumber}
                 />
+
                 </div> : 'you are not logged in'}
+
             </div>
         )
     }
@@ -129,9 +133,12 @@ const successPayment = data => {
                 name="Boxed"
                 amount={props.amount}
             />
+
         </div>
     )
 }
+
+
 
 
 

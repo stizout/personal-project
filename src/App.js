@@ -5,6 +5,7 @@ import './App.css';
 import Routes from './routes';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+// import {connect} from 'react-redux';
 
 class App extends Component {
   constructor() {
@@ -55,18 +56,26 @@ class App extends Component {
               <div className="dropdown-content" id="my-dropdown" style={display}>
                 <Link to='/profile'><p>My Account</p></Link>
                 <p onClick={() => this.logout()}>Logout</p>
-                <p href={auth0}>Login</p>
+                <a href={auth0} className="login-dropdown">Login</a>
               </div>
           </div>
             <Link to='/cart'><button className="cart-button">Cart</button></Link>
           </div>
         </div>
         <div className="main">
-          <Routes search={this.state.search}/>
+          <Routes search={this.state.search} />
+          {/* id={this.props.user ? this.props.user.id : undefined} */}
         </div>
       </div>
     );
   }
 }
 
+// const mapStateToProps = (state) => {
+//   return {
+//     user: state.user
+//   }
+// }
+
 export default App;
+// export default connect(mapStateToProps)(App);

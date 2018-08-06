@@ -16,6 +16,8 @@ class Routes extends Component {
                 <Route path="/login" component={Login}/>
                 <Route path="/profile" component={Profile}/>
             </Switch>
+            
+            // id={this.props.id}
         )
     }
 }

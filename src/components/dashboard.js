@@ -17,6 +17,7 @@ class Dashboard extends Component {
             cart: [],
             total: null,
             sort: '',
+            user: [],
         }
     }
 
@@ -27,10 +28,34 @@ class Dashboard extends Component {
         axios.get('/user').then(res => {
             this.props.login(res.data)
         })
+
+        const json = localStorage.getItem('cart')
+        const cart = JSON.parse(json)
+        const total = JSON.parse(localStorage.getItem('total'))
+
+
+        if(cart) {
+            this.setState({cart: cart, total: total})
+
+        }
+    }
+    componentDidUpdate(prevState) {
+        let total = this.state.cart.map((product) => {
+            return (
+                product.price
+            )
+        }).map((x) => parseFloat(x)).reduce((a,b) => a+b,0)
+        if(prevState.cart.length !== this.state.cart.length) {
+            const cart = JSON.stringify(this.state.cart)
+            const json = JSON.stringify(total)
+            localStorage.setItem('cart', cart)
+            localStorage.setItem('total', json)
+        }
     }
 
     addToCart(product) {
         let price = Number(product.price)
+
 
         this.setState((prevState) => {
             return {
@@ -84,10 +109,16 @@ class Dashboard extends Component {
         })
     }
 
+    updateSort(value) {
+        this.setState((prevState) => {
+            return {
+                sort: prevState.sort = value
+            }
+        })
+        this.sort();
+    }
 
-
-    sort(value) {
-        this.setState({sort: value})
+    sort() {
         if(this.state.sort === 'low') {
             function compare(a,b) {
                 let priceA = a.price * 100
@@ -102,7 +133,8 @@ class Dashboard extends Component {
             }
             let sorted = this.state.products.sort(compare)
 
-            this.setState({products: sorted})
+            // this.setState({products: sorted})
+            this.setState((prevState) => (({products: prevState.products = sorted})))
 
             
         } else if (this.state.sort === 'high') {
@@ -118,7 +150,8 @@ class Dashboard extends Component {
                 return comparison
             }
             let sorted = this.state.products.sort(compare)
-            this.setState({products: sorted})
+            // this.setState({products: sorted})
+            this.setState((prevState) => (({products: prevState.products = sorted})))
 
         }
     }
@@ -133,20 +166,27 @@ class Dashboard extends Component {
         this.setState({cart: newArray})
     }
 
-
+    likeButton(id) {
+        axios.put(`/like/${id}`, this.state.products).then(res => {
+            this.setState({products: res.data})
+        })
+    }
 
     render() {
-        console.log(this.props.search)
+        // console.log(this.state.cart)
+        // console.log(this.state.total)
+
         let products = this.state.products.filter((e) => {
             return e.name.toLowerCase().includes(this.props.search)
         }).map((product) => {
             return (
                 <div className="dashboard-product" key={product.id}>
                     <img src={product.image} className="dashboard-product-image" alt="product"/>
-                    <p>{product.name}</p>
-                    <p>{product.mini}</p>
-                    <p>{product.price}</p>
-                    <button onClick={() => this.addToCart(product)}>Add</button><i className="far fa-heart">{product.likes}</i>
+                    <p className="turnOff">{product.name}</p>
+                    <p className="turnOff">{product.mini}</p>
+                    <p className="price">${product.price}</p>
+                    <button onClick={() => this.addToCart(product)}>Add</button>
+                    <i className="far fa-heart" onClick={() => this.likeButton(product.id)}>{product.likes}</i>
                 </div>
             )
         })
@@ -164,7 +204,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="dashboard">
                         <select className="sort-input"
-                            onChange={(e) => this.sort(e.target.value)}
+                            onChange={(e) => this.updateSort(e.target.value)}
                         >
                             <option>Sort By</option>
                             <option value='low'>Price Lowest</option>

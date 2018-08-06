@@ -118,13 +118,68 @@ module.exports = {
         })
     },
     getAddresses: (req, res) => {
-        console.log(req.body)
+        console.log(+req.params.id)
+        req.app.get('db').get_addresses(+req.params.id).then(users => {
+            res.json(users)
+        }).catch(err => {
+            console.log('error on getAddresses', err);
+        });
     },
     logout: (req, res) => {
         req.session.destroy();
         res.redirect('/')
+    },
+    increaseLike: (req, res) => {
+        console.log('HIT')
+        // console.log('REQ.PARAMS', req.params.id)
+        let newLike;
+        for(var i = 0; i <req.body.length; i++) {
+            if(req.body[i].id == +req.params.id) {
+                newLike = req.body[i].likes + 1
+            }
+        }
+        console.log(newLike)
+        req.app.get('db').increase_like(newLike, +req.params.id).then(products => {
+            res.json(products)
+        }).catch(err => {
+            console.log('error with increaseLike', err)
+        });
+    },
+    deleteAddress: (req,res) => {
+        console.log(req.params.id)
+        console.log(req.body.userId)
+        req.app.get('db').delete_address(+req.params.id).then(users => {
+            console.log(users)
+            res.json(users)
+        }).catch(err => {
+            console.log('error on delete Address', err);
+        });
+    },
+    editAddress: (req,res) => {
+        const {street, city, state, zip, addressToEdit} = req.body
+        console.log('addressToEdit', street)
+        console.log('addressToEdit', addressToEdit[0].street)
+        console.log('addressToEdit', addressToEdit)
+        req.app.get('db').get_address().then(response => {
+            let newAddress = {
+                street: street || addressToEdit[0].street,
+                city: city || addressToEdit[0].city,
+                state: state || addressToEdit[0].state,
+                zip: zip || addressToEdit[0].zip,
+                id: addressToEdit[0].id
+            }
+            console.log(newAddress)
+            req.app.get('db').edit_address([
+                newAddress.street,
+                newAddress.city,
+                newAddress.state,
+                newAddress.zip,
+                newAddress.id
+            ]).then(response2 => {
+                res.status(200)
+            }).catch(err => console.log('error on editAddress', err))
+        }).catch(err => console.log('error on editAddress', err))
     }
-
 }
 
 

@@ -1,1 +1,2 @@
-select * from products;
+select * from products
+order by likes DESC;

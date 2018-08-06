@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     margin: 150px;
-    background-color: red;
+
 }
 
 .order {
@@ -27,4 +27,11 @@
 
 .cc-input {
     width: 300px;
+}
+
+
+@media (max-width: 500px) {
+    .order {
+        min-width: 300px;
+    }
 }

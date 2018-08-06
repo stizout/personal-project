@@ -28,8 +28,11 @@ app.post('/orderNumber/:id', controller.orderNumber);
 app.post('/checkout/', controller.purchase);
 app.post('/charge', controller.stripe)
 app.post('/newAddress/:id', controller.newAddress);
-app.get('/getAddresses', controller.getAddresses);
+app.get('/getAddresses/:id', controller.getAddresses);
 app.post('/logout', controller.logout);
+app.put('/like/:id', controller.increaseLike)
+app.delete('/deleteAddress/:id', controller.deleteAddress)
+app.put('/editAddress/:id', controller.editAddress);
 
 
 
