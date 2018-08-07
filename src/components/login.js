@@ -6,7 +6,7 @@ export default function Login () {
     return (
         <div className="login">
             <div className="stuff">
-                <h1>Please Login via Auth 0</h1>
+                <h1>Please Login</h1>
                 <a href={auth0}><button>Login</button></a>
             </div>
         </div>

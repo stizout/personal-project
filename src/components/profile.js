@@ -54,7 +54,8 @@ class Profile extends Component {
 
     createNewAddress(id) {
         axios.post(`/newAddress/${id}`, {...this.state}).then( res => {
-            this.setState({address: res.data})
+            console.log(res.data)
+            this.setState({userInfo: res.data, showCreateAddress: false})
         })
     }
 
@@ -70,39 +71,43 @@ class Profile extends Component {
     }
 
     render() {
-        console.log(this.state.id)
         
         return (
-            <div>
+            <div className="body">
                 {this.props.user ?
                     <div>
-                        <h1>This is my profile page.</h1>
-                        <h1>{this.props.user.name}</h1>
-                        <button onClick={() => this.seeAddress(this.state.id)}>Show My Info</button>
-                        {this.state.userInfo.length > 0 ? 
-                        <div>
-                            <p>{this.state.userInfo[0].email}</p>
-                            <p>{this.state.userInfo[0].joined}</p>
-                            {this.state.userInfo.map((user) => {
-                                return (
-                                    <div key={user.street}>
-                                        <p>
-                                            {user.street}  {user.city}, {user.state}  {user.zip}  
-                                            <button onClick={() => this.deleteAddress(user.id)}>X</button>
-                                            <button onClick={() => this.showEditAddress(user.id)}
-                                            >Edit
-                                            
-                                            </button>
-                                        </p>
-                                    </div>
-                                )
-                            })
-                        }
+                        <div className="user-info-container">
+                            <h1>{this.props.user.name}</h1>
+                            <button onClick={() => this.seeAddress(this.state.id)}>Show My Info</button>
+                            <button onClick={() => this.showCreateAddress()}>Create Address</button>
+                            
+                            {this.state.userInfo.length > 0 ? 
+                            <div>
+                                <p className=" user-basic">{this.state.userInfo[0].email} || <span className="user-basic joined-date"> Joined: {this.state.userInfo[0].joined.split('T')[0]}</span></p>
+                                <div className="user-info">
+                                <br/>
+                                <h1>My Addresses:</h1>
+                                    {this.state.userInfo.map((user) => {
+                                        return (
+                                            <div key={user.street}>
+                                                <p>
+                                                    {user.street}  {user.city}, {user.state}  {user.zip}  
+                                                    <i class="far fa-trash-alt" onClick={() => this.deleteAddress(user.id)}></i>
+                                                    <button onClick={() => this.showEditAddress(user.id)}
+                                                    >Edit
+                                                    
+                                                    </button>
+                                                </p>
+                                            </div>
+                                        )
+                                    })
+                                }
+                                </div>
+                            </div>
+                            : null }
                         </div>
-                        : null }
-                        <button onClick={() => this.showCreateAddress()}>Create Address</button>
                         {this.state.showCreateAddress ?
-                        <div>
+                        <div className="create-address-inputs">
                             <p>Street: <input onChange={(e) => this.addAddress('street', e.target.value)}/></p>
                             <p>City: <input onChange={(e) => this.addAddress('city', e.target.value)}/></p>
                             <p>State: <input onChange={(e) => this.addAddress('state', e.target.value)}/></p>
@@ -111,7 +116,7 @@ class Profile extends Component {
                         </div>
                         : null }
                         {this.state.showEditAddress ?
-                        <div>
+                        <div className="edit-address-inputs">
                             <p>Street: <input onChange={(e) => this.addAddress('street', e.target.value)}/></p>
                             <p>City: <input onChange={(e) => this.addAddress('city', e.target.value)}/></p>
                             <p>State: <input onChange={(e) => this.addAddress('state', e.target.value)}/></p>
@@ -121,12 +126,8 @@ class Profile extends Component {
                         : null }
                     </div>
                 :
-                    <div>
                         <h1>You are not logged in</h1>
-                        <h1>You are not logged in</h1>
-                        <h1>You are not logged in</h1>
-                        <h1>You are not logged in</h1>
-                    </div>
+
                 }
             </div>
         )

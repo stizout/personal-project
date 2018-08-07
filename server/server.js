@@ -4,6 +4,7 @@ const massive = require('massive');
 const session = require('express-session');
 const controller = require('./controller');
 const axios = require('axios');
+
 require('dotenv').config();
 
 
@@ -17,10 +18,12 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
 }));
+app.use( express.static( `${__dirname}/../build` ) );
 
 app.get('/dashboard', controller.readProducts);
 app.get('/user', controller.getUser);
 app.get('/cart', controller.cart);
+app.get('/cartAddress', controller.cartAddress)
 app.get('/dashboard/food', controller.getFood);
 app.get('/dashboard/cleaning', controller.getCleaning);
 app.get('/dashboard/pets', controller.getPets);
@@ -33,6 +36,8 @@ app.post('/logout', controller.logout);
 app.put('/like/:id', controller.increaseLike)
 app.delete('/deleteAddress/:id', controller.deleteAddress)
 app.put('/editAddress/:id', controller.editAddress);
+app.get('/orderConfirmation/:id', controller.orderConfirmation);
+app.post('/orderEmail', controller.orderEmail);
 
 
 
@@ -41,19 +46,22 @@ app.put('/editAddress/:id', controller.editAddress);
 // ---------- AUTH 0 ROUTES ----------------
 
 app.get('/auth/callback', (req, res) => {
+    console.log('auth/callback')
     const payload = {
         client_id: process.env.REACT_APP_AUTH0_CLIENT_ID,
         client_secret: process.env.AUTH0_CLIENT_SECRET,
         code: req.query.code,
         grant_type: 'authorization_code',
-        redirect_uri: `http://${req.headers.host}/auth/callback`
+        redirect_uri: `https://${req.headers.host}/auth/callback`
     }
 
     function tradeCodeForAccessToken() {
+        console.log('hit trade code')
         return axios.post(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/oauth/token`, payload)
     }
 
     function tradeAccessTokenForUserInfo(response) {
+        console.log('hit trade access')
         return axios.get(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo/?access_token=${response.data.access_token}`)
     }
 
@@ -71,6 +79,7 @@ app.get('/auth/callback', (req, res) => {
         today = mm + '/' + dd + '/' + yyyy;
         return req.app.get('db').get_user(response.data.sub).then(users => {
             if(users.length) {
+                console.log(users)
                 req.session.user = users[0]
                 res.redirect('/')
             } else {
@@ -96,6 +105,11 @@ app.get('/auth/callback', (req, res) => {
         console.log('Error trade code for access token', err)
         res.status(500)
     })
+})
+
+const path = require('path')
+app.get('*', (req, res)=>{
+  res.sendFile(path.join(__dirname, '../build/index.html'));
 })
 
 

@@ -4,7 +4,7 @@ import Dashboard from './components/dashboard';
 import Cart from './components/cart';
 import Login from './components/login';
 import Profile from './components/profile';
-
+import OrderConfirmation from './components/orderConfirmation';
 
 class Routes extends Component {
     render() {
@@ -15,6 +15,7 @@ class Routes extends Component {
                 <Route path="/cart" component={Cart}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/profile" component={Profile}/>
+                <Route path="/confirmation" component={OrderConfirmation}/>
             </Switch>
             
             // id={this.props.id}

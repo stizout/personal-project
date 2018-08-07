@@ -1,5 +1,6 @@
 require('dotenv').config();
 const stripe = require("stripe")(process.env.SECRET_KEY);
+const nodemailer = require('nodemailer');
 
 module.exports = {
     readProducts: (req, res) => {
@@ -17,21 +18,26 @@ module.exports = {
         req.app.get('db').get_user(req.session.user.auth0id).then(users => {
             res.json(users[0])
         }).catch(err => {
-            console.log('erro in getUser', err);
+            console.log('error in getUser', err);
         })
     },
     cart: (req, res) => {
         if(req.session.user) {
+            console.log(req.session.user.id)
             req.app.get('db').get_user(req.session.user.auth0id).then(users => {
-                res.json(users[0])
+                res.send(users[0])
             }).catch(err => {
                 res.status(500)
                 console.log('Error on the checkout', err);
             });
-
         } else {
             res.send('not logged in')
         }
+    },
+    cartAddress: (req, res) => {
+        req.app.get('db').get_user_addresses(req.session.user.id).then(addresses => {
+            res.send(addresses)
+        }).catch(err => console.log('error on cart', err))
     },
     orderNumber: (req, res) => {
         console.log(+req.params.id)
@@ -47,8 +53,9 @@ module.exports = {
         let orderNumber = [req.body[0]]
         let productId = [];
         let cart = []
-        for(var i = 0; i < req.body[1].length; i++) {
-            cart.push(req.body[1][i])
+        let addressId = [req.body[1]]
+        for(var i = 0; i < req.body[2].length; i++) {
+            cart.push(req.body[2][i])
         }
         for(var i = 0; i < cart.length; i++) {
              productId.push(cart[i].id)
@@ -97,25 +104,25 @@ module.exports = {
                 console.log('Error on stripe', err)
             } else if (charge) {
                 res.json(charge);
-                console.log('Successful Charge', charge);
+                console.log('Successful Charge');
             }
         })
     },
     newAddress: (req,res) => {
         const {street, city, state, zip} = req.body
-        console.log(street, city, state, zip)
-        console.log(req.params.id)
         req.app.get('db').new_address({
             street: street,
             city: city,
             state: state,
             zip: +zip,
             user_id: +req.params.id
-        }).then(newAddress => {
-            res.json(newAddress)
-        }).catch(err => {
-            console.log('error on newAddress', err);
-        })
+        }).then(
+            req.app.get('db').get_addresses(+req.params.id).then(users => {
+                res.json(users)
+            }).catch(err => {
+                console.log('error on newAddress 1', err);
+            })
+        ).catch(err => console.log('error on NewAddress 2', err))
     },
     getAddresses: (req, res) => {
         console.log(+req.params.id)
@@ -146,8 +153,6 @@ module.exports = {
         });
     },
     deleteAddress: (req,res) => {
-        console.log(req.params.id)
-        console.log(req.body.userId)
         req.app.get('db').delete_address(+req.params.id).then(users => {
             console.log(users)
             res.json(users)
@@ -157,9 +162,6 @@ module.exports = {
     },
     editAddress: (req,res) => {
         const {street, city, state, zip, addressToEdit} = req.body
-        console.log('addressToEdit', street)
-        console.log('addressToEdit', addressToEdit[0].street)
-        console.log('addressToEdit', addressToEdit)
         req.app.get('db').get_address().then(response => {
             let newAddress = {
                 street: street || addressToEdit[0].street,
@@ -179,6 +181,50 @@ module.exports = {
                 res.status(200)
             }).catch(err => console.log('error on editAddress', err))
         }).catch(err => console.log('error on editAddress', err))
+    },
+    orderConfirmation: (req, res) => {
+        console.log('hit the order confirmation')
+        console.log(+req.params.id)
+        console.log(+req.params.id)
+        req.app.get('db').get_orderConfirmation(+req.params.id).then(orders => {
+            res.send(orders)
+        }).catch(err => console.log('error on order Confirmation', err))
+    },
+    orderEmail: (req, res) => {
+        console.log('Order Email Hit')
+        console.log('order confirmation stuff', req.body)
+        var smtpTransport = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: { 
+                type: "OAuth2",
+                user: "stizout@gmail.com", // Your gmail address.
+                clientId: process.env.GMAIL_KEY,
+                clientSecret: process.env.GMAIL_SECRET,
+                refreshToken: process.env.GMAIL_TOKEN,
+              
+            }
+          });
+          
+          var mailOptions = {
+            from: 'xxx@gmail.com', // sender address
+            to: req.body[1], // list of receivers
+            subject: 'Order Confirmation from Boxed!', // Subject line
+            text: 'Hello There Dude', // plaintext body
+            html: `Order Confirmation Number ${req.body[0]}.
+             If you have any questions regarding your purchase, please call us at (844) 433-8686` // html body
+          };
+          
+          smtpTransport.sendMail(mailOptions, function(error, info) {
+            if (error) {
+                console.log('Error sending mail', error)
+            } else {
+              console.log('Message sent successfully! %s sent: %s', info.messageId, info.response);
+            }
+            smtpTransport.close();
+          });
+
     }
 }
 

@@ -7,8 +7,6 @@ import {login} from '../ducks/reducer';
 import {Link} from 'react-router-dom';
 import {orderNumber} from '../ducks/reducer';
 
-
-
 class Dashboard extends Component {
     constructor() {
         super();
@@ -18,6 +16,7 @@ class Dashboard extends Component {
             total: null,
             sort: '',
             user: [],
+            display: 'none',
         }
     }
 
@@ -45,12 +44,14 @@ class Dashboard extends Component {
                 product.price
             )
         }).map((x) => parseFloat(x)).reduce((a,b) => a+b,0)
+        if(this.state.cart.length > 0) {
         if(prevState.cart.length !== this.state.cart.length) {
             const cart = JSON.stringify(this.state.cart)
             const json = JSON.stringify(total)
             localStorage.setItem('cart', cart)
             localStorage.setItem('total', json)
         }
+    }
     }
 
     addToCart(product) {
@@ -172,6 +173,10 @@ class Dashboard extends Component {
         })
     }
 
+    showCategories() {
+        this.setState({display: "block"})
+    }
+
     render() {
         // console.log(this.state.cart)
         // console.log(this.state.total)
@@ -190,18 +195,22 @@ class Dashboard extends Component {
                 </div>
             )
         })
+        const display = {
+            display: this.state.display
+        }
         return (
-            <div className="body">
             <div>
+            <div className="navigation-bar" onMouseLeave={() => this.setState({display: 'none'})}>
+                <button onMouseEnter={() => this.showCategories()}>All Products<i className="fas fa-caret-down"></i></button>
+                    <div className="dropdown-content" id="my-dropdown" style={display}>
+                        <p onClick={() => this.getOnlyFood()}>Food</p>
+                        <p onClick={() => this.getOnlyCleaning()}>Cleaning</p>
+                        <p onClick={() => this.getOnlyPets()}>Pets</p>
+                        <p onClick={() => this.showAll()}>Show All</p>
+                    </div>
+                    <h1>Personal Cart<i className="fas fa-caret-down"></i></h1>
             </div>
-                <div className="navbar-left">
-                    <ul>
-                        <li onClick={() => this.getOnlyFood()}>Food</li>
-                        <li onClick={() => this.getOnlyCleaning()}>Cleaning</li>
-                        <li onClick={() => this.getOnlyPets()}>Pets</li>
-                        <li onClick={() => this.showAll()}>Show All</li>
-                    </ul>
-                </div>
+            <div className="body-dash">
                 <div className="dashboard">
                         <select className="sort-input"
                             onChange={(e) => this.updateSort(e.target.value)}
@@ -211,42 +220,35 @@ class Dashboard extends Component {
                             <option value='high'>Price Highest</option>
                         </select>
                     <div className="dashboard-product-container">
-                        {/* {this.state.products.map((product) => {
-                            return (
-                                <div className="dashboard-product" key={product.id}>
-                                    <img src={product.image} className="dashboard-product-image" alt="product"/>
-                                    <p>{product.name}</p>
-                                    <p>{product.mini}</p>
-                                    <p>{product.price}</p>
-                                    <button onClick={() => this.addToCart(product)}>Add</button><i className="far fa-heart">{product.likes}</i>
-                                </div>
-                            )
-                        })} */}
                         { products}
                     </div>
                 </div>
                 <div className="cart">
-                    <h1>Cart</h1>
                 {this.state.cart.length > 0 ?
                     <div className="cart-container">
                         {this.state.cart.map((product) => {
                             return (
                                 <div className="cart-item" key={product.id}>
-                                    <p><img src={product.image} alt="product"/>{product.price}</p><i className="fas fa-trash" onClick={() => this.deleteItem(product)}></i>  
+                                    <p>
+                                        <img src={product.image} alt="product"/>
+                                        {product.price}
+                                        <i className="far fa-trash-alt" onClick={() => this.deleteItem(product)}></i>
+                                    </p>  
                                 </div>
                             )
                         })}
                     </div>
-                : null }
+                : <img src='https://res.cloudinary.com/dvvwg1hp3/image/upload/v1533682279/Screen_Shot_2018-08-07_at_3.51.04_PM.png' className="empty-cart-image"/> }
                     <Link to='/cart'>
                     {this.props.user ?
                         <button 
                             className="cart-checkout" 
                             onClick={() => this.orderNumber(this.props.user.id)}
-                        >   Checkout {Math.floor(this.state.total * 100) / 100}
+                        >   Checkout ${Math.floor(this.state.total * 100) / 100}
                         </button>
-                    :   <button className="cart-checkout">Checkout {Math.floor(this.state.total * 100) / 100}</button>}
+                    :   <button className="cart-checkout">Checkout ${Math.floor(this.state.total * 100) / 100}</button>}
                     </Link>
+                </div>
                 </div>
             </div>
         )
