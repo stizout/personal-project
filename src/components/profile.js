@@ -18,6 +18,8 @@ class Profile extends Component {
             showCreateAddress: false,
             showEditAddress: false,
             addressToEdit: {},
+            orderHistory: [],
+            order: [],
         }
     }
     
@@ -25,13 +27,11 @@ class Profile extends Component {
         if(!this.props.user) {
             this.props.history.push('/login')
         }
-
-    } 
-    seeAddress(id) {
-        axios.get(`/getAddresses/${id}`).then( res => {
+        axios.get(`/getAddresses/${this.state.id}`).then( res => {
             this.setState({userInfo: res.data})
         })
-    }
+        
+    } 
 
     addAddress(key, userInput) {
         this.setState({
@@ -70,16 +70,32 @@ class Profile extends Component {
         axios.put(`/editAddress/${id}`, {...this.state})
     }
 
+    getOrderHistory(id) {
+        axios.get(`/orderHistory/${id}`).then(res => {
+            this.setState({orderHistory: res.data})
+        })
+    }
+
+    getOrder(id) {
+        axios.get(`/getOrder/${id}`).then(res => {
+            this.setState({order: res.data})
+        })
+    }
+
+    hideOrderHistory() {
+        this.setState({orderHistory: [], order: []})
+    }
+
     render() {
-        
+        console.log(this.state.order)
         return (
             <div className="body">
                 {this.props.user ?
                     <div>
                         <div className="user-info-container">
                             <h1>{this.props.user.name}</h1>
-                            <button onClick={() => this.seeAddress(this.state.id)}>Show My Info</button>
                             <button onClick={() => this.showCreateAddress()}>Create Address</button>
+                            <button onClick={() => this.getOrderHistory(this.state.id)}>Order History</button>
                             
                             {this.state.userInfo.length > 0 ? 
                             <div>
@@ -105,6 +121,32 @@ class Profile extends Component {
                                 </div>
                             </div>
                             : null }
+                            {this.state.orderHistory.length > 0 ?
+                                <div>
+                                    <h3>Order history</h3>
+                                        {this.state.orderHistory.map((order) => {
+                                            return (
+                                                <div>
+                                                    <button onClick={() => this.getOrder(order.order_id)}>{order.order_id}</button>
+                                                </div>
+                                            )
+                                        })}
+                                </div>
+                            : null}
+                            {this.state.order.length > 0 ?
+                                <div className="order-history-container">
+                                <button onClick={() => this.hideOrderHistory()}>X</button>
+                                    {this.state.order.map((product) => {
+                                        return (
+                                            <div className="order-display">
+                                                <img src={product.image} className="order-history-image"/>
+                                                <h3>{product.name}</h3>
+                                                <h4>{product.price}</h4>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                                : null}
                         </div>
                         {this.state.showCreateAddress ?
                         <div className="create-address-inputs">

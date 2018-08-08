@@ -30,3 +30,32 @@ i {
     margin: 0 10px;
 }
 
+.order-history-container {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    width: 230px;
+    margin: 0 auto;
+    
+}
+
+.order-history-container button {
+    width: 20px;
+    margin-left: 300px;
+    
+}
+.order-display {
+    width: 300px;
+    display: flex;
+    margin: 0 auto;
+}
+
+.order-history-image {
+    width: 100px;
+    height: 100px;
+}
+
+.order-display h3 {
+    margin: 0 50px;
+}
+

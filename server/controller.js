@@ -225,6 +225,17 @@ module.exports = {
             smtpTransport.close();
           });
 
+    },
+    getOrderHistory: (req, res) => {
+        console.log('getOrderHistory')
+        req.app.get('db').get_order_history(+req.params.id).then(orders => {
+            res.json(orders)
+        }).catch(err => console.log('error with getOrderHistory', err))
+    },
+    getOrder: (req,res) => {
+        req.app.get('db').get_order(+req.params.id).then(products => {
+            res.json(products)
+        }).catch(err => console.log('error on getOrder', err))
     }
 }
 

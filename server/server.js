@@ -38,6 +38,8 @@ app.delete('/deleteAddress/:id', controller.deleteAddress)
 app.put('/editAddress/:id', controller.editAddress);
 app.get('/orderConfirmation/:id', controller.orderConfirmation);
 app.post('/orderEmail', controller.orderEmail);
+app.get('/orderHistory/:id', controller.getOrderHistory)
+app.get('/getOrder/:id', controller.getOrder)
 
 
 
@@ -46,7 +48,6 @@ app.post('/orderEmail', controller.orderEmail);
 // ---------- AUTH 0 ROUTES ----------------
 
 app.get('/auth/callback', (req, res) => {
-    console.log('auth/callback')
     const payload = {
         client_id: process.env.REACT_APP_AUTH0_CLIENT_ID,
         client_secret: process.env.AUTH0_CLIENT_SECRET,
@@ -56,12 +57,12 @@ app.get('/auth/callback', (req, res) => {
     }
 
     function tradeCodeForAccessToken() {
-        console.log('hit trade code')
+
         return axios.post(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/oauth/token`, payload)
     }
 
     function tradeAccessTokenForUserInfo(response) {
-        console.log('hit trade access')
+ 
         return axios.get(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo/?access_token=${response.data.access_token}`)
     }
 
@@ -79,7 +80,7 @@ app.get('/auth/callback', (req, res) => {
         today = mm + '/' + dd + '/' + yyyy;
         return req.app.get('db').get_user(response.data.sub).then(users => {
             if(users.length) {
-                console.log(users)
+
                 req.session.user = users[0]
                 res.redirect('/')
             } else {
