@@ -59,3 +59,8 @@ i {
     margin: 0 50px;
 }
 
+@media (max-width: 500px) {
+    .order-history-container {
+        margin-left: -45px;
+    }
+}

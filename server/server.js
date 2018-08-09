@@ -40,6 +40,8 @@ app.get('/orderConfirmation/:id', controller.orderConfirmation);
 app.post('/orderEmail', controller.orderEmail);
 app.get('/orderHistory/:id', controller.getOrderHistory)
 app.get('/getOrder/:id', controller.getOrder)
+app.get('/sortPriceDesc', controller.sortPriceDesc)
+app.get('/sortPriceAsc', controller.sortPriceAsc)
 
 
 

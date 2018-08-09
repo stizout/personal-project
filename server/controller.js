@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 
 module.exports = {
     readProducts: (req, res) => {
+        console.log('hit dashboard')
         req.app.get('db').get_products().then(products => {
             res.json(products)
         }).catch(err => {
@@ -40,7 +41,7 @@ module.exports = {
         }).catch(err => console.log('error on cart', err))
     },
     orderNumber: (req, res) => {
-        console.log(+req.params.id)
+        console.log('hit cart', +req.params.id)
         req.app.get('db').create_orderNumber(+req.params.id).then(orderNumbers => {
             console.log('order number',orderNumbers[0].id)
             res.json(orderNumbers[0].id)
@@ -137,7 +138,7 @@ module.exports = {
         res.redirect('/')
     },
     increaseLike: (req, res) => {
-        console.log('HIT')
+        console.log('hit increase like')
         // console.log('REQ.PARAMS', req.params.id)
         let newLike;
         for(var i = 0; i <req.body.length; i++) {
@@ -153,6 +154,7 @@ module.exports = {
         });
     },
     deleteAddress: (req,res) => {
+        console.log('hit delete address')
         req.app.get('db').delete_address(+req.params.id).then(users => {
             console.log(users)
             res.json(users)
@@ -233,9 +235,22 @@ module.exports = {
         }).catch(err => console.log('error with getOrderHistory', err))
     },
     getOrder: (req,res) => {
+        console.log('hit getOrder')
         req.app.get('db').get_order(+req.params.id).then(products => {
             res.json(products)
         }).catch(err => console.log('error on getOrder', err))
+    },
+    sortPriceDesc: (req,res) => {
+        console.log('hit sort')
+        req.app.get('db').sort_price_high().then(products => {
+            res.json(products)
+        })
+    },
+    sortPriceAsc: (req,res) => {
+        console.log('hit sort')
+        req.app.get('db').sort_price_low().then(products => {
+            res.json(products)
+        })
     }
 }
 

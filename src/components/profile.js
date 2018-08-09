@@ -20,6 +20,7 @@ class Profile extends Component {
             addressToEdit: {},
             orderHistory: [],
             order: [],
+            joke: [],
         }
     }
     
@@ -85,9 +86,14 @@ class Profile extends Component {
     hideOrderHistory() {
         this.setState({orderHistory: [], order: []})
     }
+    ronSwanson() {
+        axios.get('https://ron-swanson-quotes.herokuapp.com/v2/quotes').then(res => {
+            this.setState({joke: res.data})
+        })
+    }
 
     render() {
-        console.log(this.state.order)
+        console.log(this.state.joke)
         return (
             <div className="body">
                 {this.props.user ?
@@ -96,6 +102,8 @@ class Profile extends Component {
                             <h1>{this.props.user.name}</h1>
                             <button onClick={() => this.showCreateAddress()}>Create Address</button>
                             <button onClick={() => this.getOrderHistory(this.state.id)}>Order History</button>
+                            <button onClick={() => this.ronSwanson()}>Having a bad day?</button>
+                            {this.state.joke.length > 0 ? this.state.joke.map((joke, i) => <p key={i}>{joke} - Ron Swanson</p>) : null}
                             
                             {this.state.userInfo.length > 0 ? 
                             <div>
@@ -108,7 +116,7 @@ class Profile extends Component {
                                             <div key={user.street}>
                                                 <p>
                                                     {user.street}  {user.city}, {user.state}  {user.zip}  
-                                                    <i class="far fa-trash-alt" onClick={() => this.deleteAddress(user.id)}></i>
+                                                    <i className="far fa-trash-alt" onClick={() => this.deleteAddress(user.id)}></i>
                                                     <button onClick={() => this.showEditAddress(user.id)}
                                                     >Edit
                                                     
@@ -124,9 +132,9 @@ class Profile extends Component {
                             {this.state.orderHistory.length > 0 ?
                                 <div>
                                     <h3>Order history</h3>
-                                        {this.state.orderHistory.map((order) => {
+                                        {this.state.orderHistory.map((order, i) => {
                                             return (
-                                                <div>
+                                                <div key={i}>
                                                     <button onClick={() => this.getOrder(order.order_id)}>{order.order_id}</button>
                                                 </div>
                                             )
@@ -139,7 +147,7 @@ class Profile extends Component {
                                     {this.state.order.map((product) => {
                                         return (
                                             <div className="order-display">
-                                                <img src={product.image} className="order-history-image"/>
+                                                <img src={product.image} alt="product" className="order-history-image"/>
                                                 <h3>{product.name}</h3>
                                                 <h4>{product.price}</h4>
                                             </div>
@@ -152,7 +160,7 @@ class Profile extends Component {
                         <div className="create-address-inputs">
                             <p>Street: <input onChange={(e) => this.addAddress('street', e.target.value)}/></p>
                             <p>City: <input onChange={(e) => this.addAddress('city', e.target.value)}/></p>
-                            <p>State: <input onChange={(e) => this.addAddress('state', e.target.value)}/></p>
+                            <p>State: <input onChange={(e) => this.addAddress('state', e.target.value)} maxLength="2" placeholder="UT"/></p>
                             <p>Zip: <input onChange={(e) => this.addAddress('zip', e.target.value)}/></p>
                             <button onClick={() => this.createNewAddress(this.props.user.id)}>Submit</button>
                         </div>
@@ -161,7 +169,7 @@ class Profile extends Component {
                         <div className="edit-address-inputs">
                             <p>Street: <input onChange={(e) => this.addAddress('street', e.target.value)}/></p>
                             <p>City: <input onChange={(e) => this.addAddress('city', e.target.value)}/></p>
-                            <p>State: <input onChange={(e) => this.addAddress('state', e.target.value)}/></p>
+                            <p>State: <input onChange={(e) => this.addAddress('state', e.target.value)} maxLength="2" placeholder="UT"/></p>
                             <p>Zip: <input onChange={(e) => this.addAddress('zip', e.target.value)}/></p>
                             <button onClick={() => this.editAddress(this.props.user.id)}>Submit</button>
                         </div>

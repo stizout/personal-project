@@ -17,6 +17,7 @@ class Dashboard extends Component {
             sort: '',
             user: [],
             display: 'none',
+            sortDisplay: 'none',
         }
     }
 
@@ -85,29 +86,36 @@ class Dashboard extends Component {
         })
     }
 
+    removeAll() {
+        localStorage.clear();
+        this.setState({cart: [], total: null})
+        
+    }
+
     getOnlyFood() {
         axios.get('/dashboard/food').then(res => {
             this.setState({products: res.data})
         })
-        
+        this.hideCategories()
     }
     getOnlyCleaning() {
         axios.get('/dashboard/cleaning').then(res => {
             this.setState({products: res.data})
         })
-
+        this.hideCategories()
     }
     getOnlyPets() {
         axios.get('/dashboard/pets').then(res => {
             this.setState({products: res.data})
         })
-
+        this.hideCategories()
     }
 
     showAll() {
         axios.get('/dashboard').then(res => {
             this.setState({products: res.data})
         })
+        this.hideCategories()
     }
 
     updateSort(value) {
@@ -119,42 +127,17 @@ class Dashboard extends Component {
         this.sort();
     }
 
-    sort() {
-        if(this.state.sort === 'low') {
-            function compare(a,b) {
-                let priceA = a.price * 100
-                let priceB = b.price * 100
-                let comparison = 0;
-                if(priceA > priceB) {
-                    comparison = 1;
-                } else {
-                    comparison = -1;
-                }
-                return comparison
-            }
-            let sorted = this.state.products.sort(compare)
-
-            // this.setState({products: sorted})
-            this.setState((prevState) => (({products: prevState.products = sorted})))
-
-            
-        } else if (this.state.sort === 'high') {
-            function compare(a,b) {
-                let priceA = a.price * 100
-                let priceB = b.price * 100
-                let comparison = 0;
-                if(priceA > priceB) {
-                    comparison = -1;
-                } else {
-                    comparison = 1;
-                }
-                return comparison
-            }
-            let sorted = this.state.products.sort(compare)
-            // this.setState({products: sorted})
-            this.setState((prevState) => (({products: prevState.products = sorted})))
-
-        }
+    sortPriceDesc() {
+        axios.get('/sortPriceDesc').then(res => {
+            this.setState({products: res.data})
+        })
+        this.hideSort();
+    }
+    sortPriceAsc() {
+        axios.get('/sortPriceAsc').then(res => {
+            this.setState({products: res.data})
+        })
+        this.hideSort();
     }
 
     search() {
@@ -175,6 +158,19 @@ class Dashboard extends Component {
 
     showCategories() {
         this.setState({display: "block"})
+    }
+
+    hideCategories() {
+        this.setState({display: 'none'})
+    }
+
+    showSort() {
+        this.setState({sortDisplay: "block"})
+
+    }
+
+    hideSort() {
+        this.setState({sortDisplay: 'none'})
     }
 
     render() {
@@ -198,9 +194,12 @@ class Dashboard extends Component {
         const display = {
             display: this.state.display
         }
+        const sortDisplay = {
+            display: this.state.sortDisplay
+        }
         return (
             <div>
-            <div className="navigation-bar" onMouseLeave={() => this.setState({display: 'none'})}>
+            <div className="navigation-bar" onMouseLeave={() => this.hideCategories()}>
                 <button onMouseEnter={() => this.showCategories()}>All Products<i className="fas fa-caret-down"></i></button>
                     <div className="dropdown-content" id="my-dropdown" style={display}>
                         <p onClick={() => this.getOnlyFood()}>Food</p>
@@ -212,13 +211,14 @@ class Dashboard extends Component {
             </div>
             <div className="body-dash">
                 <div className="dashboard">
-                        <select className="sort-input"
-                            onChange={(e) => this.updateSort(e.target.value)}
-                        >
-                            <option>Sort By</option>
-                            <option value='low'>Price Lowest</option>
-                            <option value='high'>Price Highest</option>
-                        </select>
+                    <div className="sort-button">
+                        <button onMouseEnter={() => this.showSort()} onTouchStart={() => this.showSort()}>Sort By</button>
+                        <div className="dropdown-content" style={sortDisplay} onMouseLeave={() => this.hideSort()} >
+                            <p onClick={() => this.sortPriceDesc()} >Price <i className="far fa-arrow-alt-circle-up"></i> </p>
+                            <p onClick={() => this.sortPriceAsc()} >Price <i className="far fa-arrow-alt-circle-down"></i></p>
+                        </div>
+
+                    </div>
                     <div className="dashboard-product-container">
                         { products}
                     </div>
@@ -226,19 +226,20 @@ class Dashboard extends Component {
                 <div className="cart">
                 {this.state.cart.length > 0 ?
                     <div className="cart-container">
+                    <button onClick={() => this.removeAll()}>Remove All</button>
                         {this.state.cart.map((product) => {
                             return (
                                 <div className="cart-item" key={product.id}>
-                                    <p>
+                                    <div>
                                         <img src={product.image} alt="product"/>
-                                        {product.price}
+                                        <p className="cart-item-price">{product.price}</p>
                                         <i className="far fa-trash-alt" onClick={() => this.deleteItem(product)}></i>
-                                    </p>  
+                                    </div>  
                                 </div>
                             )
                         })}
                     </div>
-                : <img src='https://res.cloudinary.com/dvvwg1hp3/image/upload/v1533682279/Screen_Shot_2018-08-07_at_3.51.04_PM.png' className="empty-cart-image"/> }
+                : <img src='https://res.cloudinary.com/dvvwg1hp3/image/upload/v1533682279/Screen_Shot_2018-08-07_at_3.51.04_PM.png' alt="bonus" className="empty-cart-image"/> }
                     <Link to='/cart'>
                     {this.props.user ?
                         <button 

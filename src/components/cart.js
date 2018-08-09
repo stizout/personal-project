@@ -74,7 +74,6 @@ class Cart extends Component {
                         <Link to="/profile"><button>Jump</button></Link>
                     </div>
                     :
-                    
                     <div className="address">
                         {this.state.address.map((address) => {
                             return (
@@ -85,25 +84,23 @@ class Cart extends Component {
                         })}
                     </div>}
                 </div>
+                <h1>Total: {finalSum}</h1>
+                {this.state.shipToAddress.length > 0 ?
+                <h2>Ship To Address: {this.state.shipToAddress[1]}</h2>
+                : null}
+                {this.state.shipToAddress.length > 0 ?
+                <Checkout 
+                    name="Boxed"
+                    amount={finalSum}
+                    cart={this.state.cart}
+                    orderNumber={this.props.orderNumber}
+                    addressId={this.state.shipToAddress}
+                    confirmation={this.props.history.push}
+                    email={this.props.user.email}
+                />
+                : null}
 
-                    <h1>Total: {finalSum}</h1>
-                    {this.state.shipToAddress.length > 0 ?
-                    <h2>Ship To Address: {this.state.shipToAddress[1]}</h2>
-                    : null}
-                    {this.state.shipToAddress.length > 0 ?
-                    <Checkout 
-                        name="Boxed"
-                        amount={finalSum}
-                        cart={this.state.cart}
-                        orderNumber={this.props.orderNumber}
-                        addressId={this.state.shipToAddress}
-                        confirmation={this.props.history.push}
-                        email={this.props.user.email}
-                    />
-                    : null}
-
-                    </div> : 'you are not logged in'}
-
+                </div> : 'you are not logged in'}
             </div>
         )
     }

@@ -42,13 +42,14 @@ class App extends Component {
   }
 
   search(userInput) {
-    this.setState({search: userInput})
+    this.setState({search: userInput.toLowerCase()})
   }
 
   logout() {
     axios.post('/logout').then(
       this.props.history.push('/')
     )
+    this.hideProfile();
   }
 
   showAnnouncements() {
@@ -69,7 +70,7 @@ class App extends Component {
     const announcements = this.state.announcements.map((item,i) => {
       return (
         <div className="announcement-item" key={i}>
-          <img src={item.img} className="announcement-image"/>
+          <img src={item.img} alt="announcement item" className="announcement-image"/>
           {item.date}
           <p>{item.title}</p>
         </div>
@@ -80,7 +81,7 @@ class App extends Component {
       <div className="container">
         <div className="navbar-main">
           <div className="nav-left">
-            <Link to='/'><img src='https://res.cloudinary.com/dvvwg1hp3/image/upload/v1533681123/Screen_Shot_2018-08-07_at_3.29.46_PM.png'/></Link>
+            <Link to='/'><img src='https://res.cloudinary.com/dvvwg1hp3/image/upload/v1533681123/Screen_Shot_2018-08-07_at_3.29.46_PM.png' alt="logo"/></Link>
             <div className="searchbar">
               <input placeholder="Search for your favorite items in bulk" onChange={(e) => this.search(e.target.value)} /><i className="fas fa-search"></i>
             </div>
@@ -96,9 +97,9 @@ class App extends Component {
                 {announcements}
               </div>
               <div className="dropdown-content" id="my-dropdown" style={display}>
-                <Link to='/profile'><p>My Account</p></Link>
+                <Link to='/profile'><p onClick={() => this.hideProfile()}>My Account</p></Link>
                 <p onClick={() => this.logout()}>Logout</p>
-                <a href={auth0} className="login-dropdown">Login</a>
+                <a href={auth0} className="login-dropdown" onClick={() => this.hideProfile()}>Login</a>
               </div>
           </div>
           </div>
