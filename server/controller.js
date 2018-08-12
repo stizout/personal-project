@@ -155,7 +155,9 @@ module.exports = {
     },
     deleteAddress: (req,res) => {
         console.log('hit delete address')
-        req.app.get('db').delete_address(+req.params.id).then(users => {
+        console.log(req.body)
+        console.log(req.params)
+        req.app.get('db').delete_address(+req.params.id, +req.params.userId ).then(users => {
             console.log(users)
             res.json(users)
         }).catch(err => {
@@ -187,9 +189,9 @@ module.exports = {
     orderConfirmation: (req, res) => {
         console.log('hit the order confirmation')
         console.log(+req.params.id)
-        console.log(+req.params.id)
-        req.app.get('db').get_orderConfirmation(+req.params.id).then(orders => {
-            res.send(orders)
+        req.app.get('db').get_orderConfirmation(+req.params.id).then(products => {
+            console.log(products)
+            res.json(products)
         }).catch(err => console.log('error on order Confirmation', err))
     },
     orderEmail: (req, res) => {

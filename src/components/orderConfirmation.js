@@ -13,14 +13,10 @@ class OrderConfirmation extends React.Component {
     }
 
     componentDidMount() {
-        let orderNumber = this.state.id
-        console.log(orderNumber)
-        axios.get(`/orderConfirmation/${orderNumber}`).then(res => {
-            console.log(res.data)
-            this.setState({orderInfo: res.data})
-        })
+        this.setState({orderInfo: this.props.cart})
     }
     render() {
+        console.log(this.props.cart)
         return (
             <div>
                 <div className="confirmation-body">
@@ -42,7 +38,8 @@ class OrderConfirmation extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        orderNumber: state.orderNumber
+        orderNumber: state.orderNumber,
+        cart: state.cart
     }
 }
 

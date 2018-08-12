@@ -21,6 +21,7 @@ class Profile extends Component {
             orderHistory: [],
             order: [],
             joke: [],
+            showAddress: false,
         }
     }
     
@@ -54,16 +55,16 @@ class Profile extends Component {
     }
 
     createNewAddress(id) {
-        axios.post(`/newAddress/${id}`, {...this.state}).then( res => {
-            console.log(res.data)
-            this.setState({userInfo: res.data, showCreateAddress: false})
+        axios.post(`/newAddress/${id}`, {...this.state}).then( () => {
+            axios.get(`/getAddresses/${this.state.id}`).then( res => {
+                this.setState({userInfo: res.data, showCreateAddress: false})
+            })
         })
     }
 
-    deleteAddress(id) {
-        let userId = this.state.id
-        axios.delete(`/deleteAddress/${id}`, userId).then(res => {
-            console.log(res.data)
+    deleteAddress(id, userId) {
+        axios.delete(`/deleteAddress/${id}/${userId}`).then(res => {
+            this.setState({userInfo: res.data})
         })
     }
 
@@ -79,7 +80,10 @@ class Profile extends Component {
 
     getOrder(id) {
         axios.get(`/getOrder/${id}`).then(res => {
-            this.setState({order: res.data})
+            this.setState({
+                order: res.data,
+                orderHistory: [],
+            })
         })
     }
 
@@ -92,6 +96,18 @@ class Profile extends Component {
         })
     }
 
+    showAddresses() {
+        this.setState({showAddress: !this.state.showAddress})
+        if(this.state.showEditAddress) {
+            this.showEditAddress()
+
+        }
+    }
+
+    deleteRon() {
+        this.setState({joke: []})
+    }
+
     render() {
         console.log(this.state.joke)
         return (
@@ -99,43 +115,50 @@ class Profile extends Component {
                 {this.props.user ?
                     <div>
                         <div className="user-info-container">
-                            <h1>{this.props.user.name}</h1>
-                            <button onClick={() => this.showCreateAddress()}>Create Address</button>
-                            <button onClick={() => this.getOrderHistory(this.state.id)}>Order History</button>
-                            <button onClick={() => this.ronSwanson()}>Having a bad day?</button>
-                            {this.state.joke.length > 0 ? this.state.joke.map((joke, i) => <p key={i}>{joke} - Ron Swanson</p>) : null}
-                            
+                            <h1>{this.props.user.name}'s Boxed</h1>
                             {this.state.userInfo.length > 0 ? 
                             <div>
                                 <p className=" user-basic">{this.state.userInfo[0].email} || <span className="user-basic joined-date"> Joined: {this.state.userInfo[0].joined.split('T')[0]}</span></p>
+                            </div>
+                            : null }
+                            <button onClick={() => this.showAddresses()}>{this.state.showAddress ? 'Hide' :'My Addresses:'}</button>
+                            <button onClick={() => this.showCreateAddress()}>{this.state.showCreateAddress ? 'Hide' :'Create Address'}</button>
+                            <button onClick={() => this.getOrderHistory(this.state.id)}>Order History</button>
+                            <button onClick={() => this.ronSwanson()}>Having a bad day?</button>
+                            {this.state.joke.length > 0 ? this.state.joke.map((joke, i) => <p key={i}>{joke} - Ron Swanson <button onClick={() => this.deleteRon()}>X</button></p>) : null}
+                            {this.state.showAddress ? 
                                 <div className="user-info">
                                 <br/>
-                                <h1>My Addresses:</h1>
                                     {this.state.userInfo.map((user) => {
                                         return (
                                             <div key={user.street}>
+                                                {this.state.showAddress ? 
                                                 <p>
                                                     {user.street}  {user.city}, {user.state}  {user.zip}  
-                                                    <i className="far fa-trash-alt" onClick={() => this.deleteAddress(user.id)}></i>
+                                                    <i className="far fa-trash-alt" onClick={() => this.deleteAddress(user.id, this.state.id)}></i>
                                                     <button onClick={() => this.showEditAddress(user.id)}
                                                     >Edit
                                                     
                                                     </button>
                                                 </p>
+                                                : null}
                                             </div>
                                         )
                                     })
                                 }
                                 </div>
-                            </div>
-                            : null }
+                                : null}
                             {this.state.orderHistory.length > 0 ?
                                 <div>
-                                    <h3>Order history</h3>
+                                    <h3>Order history <button onClick={() => this.hideOrderHistory()}>X</button></h3>
                                         {this.state.orderHistory.map((order, i) => {
                                             return (
                                                 <div key={i}>
-                                                    <button onClick={() => this.getOrder(order.order_id)}>{order.order_id}</button>
+                                                    <div onClick={() => this.getOrder(order.order_id)} className="order-history-button">
+                                                        <p>Order Number</p>
+                                                        <p>{order.order_id}</p>
+                                                        <div><i className="fas fa-angle-double-right"></i></div>
+                                                    </div>
                                                 </div>
                                             )
                                         })}
@@ -143,7 +166,7 @@ class Profile extends Component {
                             : null}
                             {this.state.order.length > 0 ?
                                 <div className="order-history-container">
-                                <button onClick={() => this.hideOrderHistory()}>X</button>
+                                <button onClick={() => this.hideOrderHistory()} id="removeOrder">X</button>
                                     {this.state.order.map((product) => {
                                         return (
                                             <div className="order-display">

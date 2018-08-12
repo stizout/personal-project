@@ -21,3 +21,17 @@
 .product img {
     max-width: 200px;
 }
+
+@media (max-width: 500px) {
+    .confirmation-body {
+        min-width: 300px;
+        margin: 30px;
+    }
+    .product {
+        min-width: 300px;
+    }
+    .product img {
+        max-width: 80px;
+    }
+
+}

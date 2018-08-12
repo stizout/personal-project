@@ -191,7 +191,8 @@ body {
         text-align: right;
         border: none;
         bottom: 0;
-        min-height: 80px;
+        min-height: 60px;
+        max-width: 400px;
         width: 375px;
         background-color: white;
         border-top: 1px solid black;
@@ -208,6 +209,10 @@ body {
     }
     .cart-container {
         flex-direction: row;
+    }
+
+    .cart-container button {
+        display: none;
     }
     .cart-item {
         justify-content: center;
@@ -244,7 +249,8 @@ body {
     .dashboard-product {
         padding: 5px;
         margin-top: 25px;
-        margin-right: 25px;
+        margin-right: 10px;
+        margin-left: 30px;
         max-width: 90px;
         text-align: center;
         position: relative;

@@ -34,7 +34,7 @@ app.post('/newAddress/:id', controller.newAddress);
 app.get('/getAddresses/:id', controller.getAddresses);
 app.post('/logout', controller.logout);
 app.put('/like/:id', controller.increaseLike)
-app.delete('/deleteAddress/:id', controller.deleteAddress)
+app.delete('/deleteAddress/:id/:userId', controller.deleteAddress)
 app.put('/editAddress/:id', controller.editAddress);
 app.get('/orderConfirmation/:id', controller.orderConfirmation);
 app.post('/orderEmail', controller.orderEmail);
