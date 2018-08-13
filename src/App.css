@@ -153,6 +153,22 @@
   display: block;
 }
 
+@media (max-width: 1300px) {
+  .fa-grin-squint-tears {
+    font-size: 20px;
+
+  }
+  .fa-bullhorn {
+    font-size: 20px;
+
+  }
+  
+  .fa-shopping-cart {
+    font-size: 20px;
+
+  }
+}
+
 
 @media (max-width: 500px) {
   .searchbar input{

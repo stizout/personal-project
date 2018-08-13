@@ -75,15 +75,24 @@ class Dashboard extends Component {
     }
 
     deleteItem(productToRemove) {
+        let indexToRemove = this.state.cart.indexOf(productToRemove)
         let price = productToRemove.price
+        console.log(indexToRemove)
+        let newArr = this.state.cart.filter((e,i) => {
+           return indexToRemove !== i
+
+        })
         this.setState((prevState) => {
             return {
-                cart: prevState.cart.filter((product) => {
-                    return product.image !== productToRemove.image
-                }),
+                cart: newArr,
                 total: prevState.total - price
             }
         })
+        if(this.state.cart.length === 0) {
+            this.setState({
+                total: null,
+            })
+        }
     }
 
     removeAll() {
