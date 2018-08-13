@@ -69,7 +69,12 @@ class Profile extends Component {
     }
 
     editAddress(id) {
-        axios.put(`/editAddress/${id}`, {...this.state})
+        axios.put(`/editAddress/${id}`, {...this.state}).then( () => {
+            axios.get(`/getAddresses/${this.state.id}`).then( res => {
+                this.setState({userInfo: res.data, showEditAddress: false})
+            })
+        })
+        
     }
 
     getOrderHistory(id) {

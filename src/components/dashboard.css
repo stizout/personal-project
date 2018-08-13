@@ -183,7 +183,7 @@ body {
     margin-right: 50px;
     overflow: auto;
 }
-.fa-trash-alt {
+.cart-item .fa-trash-alt {
     position: absolute;
     right: 0;
 }
@@ -249,7 +249,7 @@ body {
         flex-direction: column;
         padding: 2px;
     }
-    .fa-trash-alt {
+    .cart-item .fa-trash-alt {
         position: relative;
     }
     .cart-item img {

@@ -182,6 +182,7 @@ module.exports = {
                 newAddress.zip,
                 newAddress.id
             ]).then(response2 => {
+                res.json(response2)
                 res.status(200)
             }).catch(err => console.log('error on editAddress', err))
         }).catch(err => console.log('error on editAddress', err))
