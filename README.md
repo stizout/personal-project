@@ -49,4 +49,5 @@
   <h4>Addresses</h4>
   
   <h4>Order History</h4>
+  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-history.png"/>
     
