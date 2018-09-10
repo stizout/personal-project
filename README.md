@@ -31,22 +31,16 @@
   <h2>ScreenShots</h2>
   
   <h4>Dashboard</h4>
-  
-  
-  
- <h4>SignUp</h4>
-  
+  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-Dashboard.png"/>
   
   
   <h4>Cart</h4>
-   
-   
-  
-  <h4>Profile</h4>
-    
+  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-Cart.png"/>
   
   
   <h4>Addresses</h4>
+  
+  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-Addresses.png"/>
   
   <h4>Order History</h4>
   <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-history.png"/>
