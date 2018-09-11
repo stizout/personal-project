@@ -37,7 +37,7 @@
       "target": "http://localhost:4000"
     }
   },
-  "now":{
-    "alias":"personal-project"
+  "now": {
+    "alias": "personal-project"
   }
 }
