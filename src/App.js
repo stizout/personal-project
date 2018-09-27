@@ -15,17 +15,17 @@ class App extends Component {
       showAnnounce: 'none',
       announcements: [
         {
-          img: 'https://res.cloudinary.com/dvvwg1hp3/image/upload/f_auto/v1532450604/pop-tarts-oreo.jpg',
+          img: 'https://i.imgur.com/pumZTyQ.jpg',
           title: 'Get your Oreo on TODAY!!',
           date: 'August 6'
         },
         {
-          img: 'https://res.cloudinary.com/dvvwg1hp3/image/upload/f_auto/v1532450603/planters-nuts-peanuts.jpg',
+          img: 'https://i.imgur.com/8kQQd5z.jpg',
           title: 'Now serving Planters Peanuts, add to your cart and enjoy each bite!',
           date: 'August 2'
         },
         {
-          img: 'http://res.cloudinary.com/dvvwg1hp3/image/upload/f_auto/v1532450604/pringles-cheedar.jpg',
+          img: 'https://i.imgur.com/662LggT.jpg',
           title: 'Pringles Cheddar are back in stock and availble upon purchase',
           date: 'July 28'
         },

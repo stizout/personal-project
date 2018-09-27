@@ -12,7 +12,6 @@ pm.test('Should return all 37 items', function() {
 
 
 
-
 const response = pm.response.json();
 
 pm.test('Should receive pets back', function() {

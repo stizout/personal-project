@@ -248,7 +248,7 @@ class Dashboard extends Component {
                             )
                         })}
                     </div>
-                : <img src='https://res.cloudinary.com/dvvwg1hp3/image/upload/v1533682279/Screen_Shot_2018-08-07_at_3.51.04_PM.png' alt="bonus" className="empty-cart-image"/> }
+                : <img src='https://i.imgur.com/jo3eNDJ.png' alt="bonus" className="empty-cart-image"/> }
                     <Link to='/cart'>
                     {this.props.user ?
                         <button 
