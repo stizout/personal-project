@@ -30,18 +30,17 @@
   
   <h2>ScreenShots</h2>
   
-  <h4>Dashboard</h4>
-  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-Dashboard.png"/>
+  <h4>Landing</h4>
+  <img src="https://github.com/stizout/kickstarter/blob/master/images/React%20App%202018-10-15%2014-10-44.png"/>
   
   
-  <h4>Cart</h4>
-  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-Cart.png"/>
+  <h4>Campaign Dashboard</h4>
+  <img src="https://github.com/stizout/kickstarter/blob/master/images/React%20App%202018-10-15%2014-11-11.png"/>
   
   
-  <h4>Addresses</h4>
+  <h4>Campaign</h4>
+  <img src="https://github.com/stizout/kickstarter/blob/master/images/React%20App%202018-10-15%2014-11-46.png"/>
   
-  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-Addresses.png"/>
-  
-  <h4>Order History</h4>
-  <img src="https://github.com/stizout/personal-project/blob/master/images/Personal-history.png"/>
+  <h4>Profile Section</h4>
+  <img src="https://github.com/stizout/kickstarter/blob/master/images/React%20App%202018-10-15%2014-13-09.png"/>
     
